@@ -184,7 +184,7 @@ namespace IW4MAdmin.Application.EventParsers
                 case GameEvent.EventType.MapChange:
                     return ParseMatchStartEvent(logLine, gameTime);
             }
-            
+
             if (logLine.StartsWith("GSE;"))
             {
                 var gscEvent = new GameScriptEvent
@@ -206,7 +206,7 @@ namespace IW4MAdmin.Application.EventParsers
                     var eventTypeName = createdEvent.GetType().Name;
                     var isParseIgnoredEvent = eventTypeName is nameof(GameScriptEvent) or nameof(AntiCheatDamageEvent);
 
-                    // avoid parsing base script event (which has no viable properties) 
+                    // avoid parsing base script event (which has no viable properties)
                     // and anticheat events as they are manually mapped.
                     // for performance as dynamic "Invoke" is relatively costly due
                     if (!isParseIgnoredEvent)
@@ -217,7 +217,7 @@ namespace IW4MAdmin.Application.EventParsers
                     return createdEvent as GameEventV2;
                 }
             }
-            
+
 
             if (eventKey is null || !_customEventRegistrations.ContainsKey(eventKey))
             {
@@ -618,11 +618,15 @@ namespace IW4MAdmin.Application.EventParsers
             }
 
             var message = new string(matchResult.Values[Configuration.Say.GroupMapping[ParserRegex.GroupType.Message]]
-                .Where(c => !char.IsControl(c)).ToArray());
+                .Where(c => !char.IsControl(c)).ToArray()).Trim();
 
             if (message.StartsWith("/"))
             {
                 message = message[1..];
+            }
+            if (message.StartsWith(".") || message.StartsWith("!"))
+            {
+                message = _appConfig.CommandPrefix + message[1..];
             }
 
             if (String.IsNullOrEmpty(message))

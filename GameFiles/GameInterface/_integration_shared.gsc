@@ -379,13 +379,7 @@ WaitForUrlRequestComplete()
 {
     level endon( level.eventTypes.gameEnd );
 
-    timeoutResult = self [[level.overrideMethods[level.commonFunctions.waitTillAnyTimeout]]]( 30, level.eventTypes.urlRequestCompleted );
-
-    if ( timeoutResult == level.eventBus.timeoutKey )
-    {
-        scripts\_integration_base::LogWarning( "Request to " + self.url  + " timed out" );
-        self notify ( level.eventTypes.urlRequestCompleted, "error" );
-    }
+    self [[level.overrideMethods[level.commonFunctions.waittillNotifyOrTimeout]]]( level.eventTypes.urlRequestCompleted, 30 );
 
     scripts\_integration_base::LogDebug( "Request to " + self.url  + " completed" );
 

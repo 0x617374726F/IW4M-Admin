@@ -123,28 +123,4 @@ jobs:
         with:
           name: SharedLibraryCore-${{ env.buildNumber }}
           path: ${{ env.outputDirectory }}/*.nupkg
-  
-  publish:
-    runs-on: ubuntu-latest
-    
-    needs: [ make_version, build_pack ]
-    environment: prerelease
-    if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/release/pre' || github.ref == 'refs/heads/develop' }}
-    
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: SharedLibraryCore-${{ needs.make_version.outputs.build_num }}
-          path: ${{ env.outputDirectory }}
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 10.0.x
-
-      - name: Publish NuGet package
-        run: |
-          for file in ${{ env.outputDirectory }}/*.nupkg; do
-            dotnet nuget push "$file" --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
-          done

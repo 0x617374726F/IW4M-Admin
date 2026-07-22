@@ -64,14 +64,14 @@ namespace IW4MAdmin.Application
         // TODO: Temporary shim for Dragonfruit removal.
         public static async Task Main()
         {
-            await Main(false, 25, 25);
+            await Main(true, 25, 25);
         }
 
         /// <summary>
         /// entrypoint of the application
         /// </summary>
         /// <returns></returns>
-        public static async Task Main(bool noConfirm = false, int? maxConcurrentRequests = 25,
+        public static async Task Main(bool noConfirm = true, int? maxConcurrentRequests = 25,
             int? requestQueueLimit = 25)
         {
             AppDomain.CurrentDomain.SetData("DataDirectory", Utilities.OperatingDirectory);
